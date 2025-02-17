@@ -80,31 +80,35 @@ public class Balancesheet{
             return calculateTotalAssets() - calculateTotalLiabilities();
         }
       public void display(){
-        System.out.println("\n======STARTUP BALANCE SHEET======");
-        System.out.println("Assets:");
-        System.out.println("\nCurrent Assets:");
-        assets.stream().filter(Asset::isCurrent).forEach(System.out::println);
-        System.out.printf("%-45s Rs.%-10.2f\n","Total Current Assets:       $%.2f%n", calculateTotalAssets(true));
+          System.out.println("\n======STARTUP BALANCE SHEET======");
 
-        System.out.println("\nNon-Current Assets:");
-        assets.stream().filter(a -> !a.isCurrent()).forEach(System.out::println);
-        System.out.printf("%-45s Rs.%-10.2f\n","Total Non-Current Assets:   $%.2f%n", calculateTotalAssets(false));
+          System.out.println("Assets:");
 
-        System.out.printf("\nTotal Assets:               $%.2f%n", calculateTotalAssets());
+          System.out.println("\nCurrent Assets:");
+          assets.stream().filter(Asset::isCurrent).forEach(System.out::println);
+          System.out.printf("%-45s Rs.%.2f\n", "Total Current Assets:", calculateTotalAssets(true));
 
-        System.out.println("\nLiabilities:");
-        System.out.println("\nShort-term Liabilities:");
-        liabilities.stream().filter(Liability::isShortTerm).forEach(System.out::println);
-        System.out.printf("%-45s Rs.%-10.2f\n","Total Short-term Liabilities:  $%.2f%n", calculateTotalLiabilities(true));
+          System.out.println("\nNon-Current Assets:");
+          assets.stream().filter(a -> !a.isCurrent()).forEach(System.out::println);
+          System.out.printf("%-45s Rs.%.2f\n", "Total Non-Current Assets:", calculateTotalAssets(false));
 
-        System.out.println("\nLong-term Liabilities:");
-        liabilities.stream().filter(l -> !l.isShortTerm()).forEach(System.out::println);
-        System.out.printf("%-45s Rs.%-10.2f\n","Total Long-term Liabilities:   $%.2f%n", calculateTotalLiabilities(false));
+          System.out.printf("\nTotal Assets:%44s Rs.%.2f\n", "", calculateTotalAssets());
 
-        System.out.printf("%-45s Rs.%-10.2f\n","\nTotal Liabilities:          $%.2f%n", calculateTotalLiabilities());
+          System.out.println("\nLiabilities:");
 
-        System.out.printf("%-45s Rs.%-10.2f\n","\nOwner's Equity:             $%.2f%n", calculateEquity());
-        System.out.println("==========================================");
+          System.out.println("\nShort-term Liabilities:");
+          liabilities.stream().filter(Liability::isShortTerm).forEach(System.out::println);
+          System.out.printf("%-45s Rs.%.2f\n", "Total Short-term Liabilities:", calculateTotalLiabilities(true));
+
+          System.out.println("\nLong-term Liabilities:");
+          liabilities.stream().filter(l -> !l.isShortTerm()).forEach(System.out::println);
+          System.out.printf("%-45s Rs.%.2f\n", "Total Long-term Liabilities:", calculateTotalLiabilities(false));
+
+          System.out.printf("%-45s Rs.%.2f\n", "\nTotal Liabilities:", calculateTotalLiabilities());
+
+          System.out.printf("%-45s Rs.%.2f\n", "\nOwner's Equity:", calculateEquity());
+
+          System.out.println("==========================================");
 
       }
 
@@ -138,7 +142,6 @@ public class Balancesheet{
             boolean isShortTerm = s.next().equalsIgnoreCase("yes");
             ns.addLiability(new Liability(liabilityType, value, isShortTerm));
         }
-
         ns.display();
         s.close();
     }
