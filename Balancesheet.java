@@ -140,6 +140,46 @@ public class Balancesheet {
             System.out.println("=========================================================");
 
         }
+        public void displayFinancialRatio(){
+            double currentAssets=calculateTotalAssets(true);
+            double shortTermLiabilities=calculateTotalLiabilities(true);
+            double totalLiabilities=calculateTotalLiabilities();
+            double ownerEquity=calculateEquity();
+            double totalAssets=calculateTotalAssets();
+            System.out.println("\n========FINANCIAL STATUS=========");
+            //current ratio
+            if(shortTermLiabilities!=0){
+                double currentRatio=currentAssets/shortTermLiabilities;
+                System.out.printf("%-30s %.2f\n","Current Ratio:",currentRatio);
+            }else{
+                System.out.println("Current Ratio:N/A (No short term liabilities)");
+            }
+            //debt-equity ratio
+            if (ownerEquity != 0) {
+                double debtToEquity = totalLiabilities / ownerEquity;
+                System.out.printf("%-30s %.2f\n", "Debt-to-Equity Ratio:", debtToEquity);
+            } else {
+                System.out.println("Debt-to-Equity Ratio: N/A (No equity)");
+            }
+            // Equity Ratio
+            if (totalAssets != 0) {
+                double equityRatio = ownerEquity / totalAssets;
+                System.out.printf("%-30s %.2f%%\n", "Equity Ratio:", equityRatio * 100);
+            } else {
+                System.out.println("Equity Ratio: N/A (No assets)");
+            }
+
+            // Debt Ratio
+            if (totalAssets != 0) {
+                double debtRatio = totalLiabilities / totalAssets;
+                System.out.printf("%-30s %.2f%%\n", "Debt Ratio:", debtRatio * 100);
+            } else {
+                System.out.println("Debt Ratio: N/A (No assets)");
+            }
+
+            System.out.println("=======================================================");
+
+        }
 
     }
 
