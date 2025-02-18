@@ -1,14 +1,15 @@
 import java.util.*;
-public class Balancesheet{
-   static class Asset{
+
+public class Balancesheet {
+    static class Asset {
         private String name;
         private double value;
         private boolean isCurrent;
 
-        public Asset(String name,double value,boolean isCurrent){
-            this.name=name;
-            this.value=value;
-            this.isCurrent=isCurrent;
+        public Asset(String name, double value, boolean isCurrent) {
+            this.name = name;
+            this.value = value;
+            this.isCurrent = isCurrent;
         }
 
         public double getValue() {
@@ -19,46 +20,63 @@ public class Balancesheet{
             return isCurrent;
         }
 
+        public String getName() {
+            return name; // Added getter for name
+        }
+
         @Override
         public String toString() {
-            return name + ": Rs." + String.format("%.2f", value) + (isCurrent ? "(Current-asset)" : "(Noncurrent-asset)");
+            return name + ": Rs." + String.format("%.2f", value)
+                    + (isCurrent ? "(Current-asset)" : "(Noncurrent-asset)");
         }
     }
-   static  class Liability{
+
+    static class Liability {
         private String name;
         private double value;
         private boolean isShortTerm;
-        public Liability(String name,double value,boolean isShortTerm){
-            this.name=name;
-            this.value=value;
-            this.isShortTerm=isShortTerm;
+
+        public Liability(String name, double value, boolean isShortTerm) {
+            this.name = name;
+            this.value = value;
+            this.isShortTerm = isShortTerm;
         }
-        public double getValue(){
+
+        public double getValue() {
             return value;
         }
-        public boolean isShortTerm(){
+
+        public boolean isShortTerm() {
             return isShortTerm;
         }
+
+        public String getName() {
+            return name;
+        }
+
         @Override
-        public String toString(){
-                 return name+": Rs."+String.format("%.2f",value)+(isShortTerm?"(Short-term)":"(Long-term)");
+        public String toString() {
+            return name + ": Rs." + String.format("%.2f", value) + (isShortTerm ? "(Short-term)" : "(Long-term)");
         }
     }
-   static class BalanceSheet{
-        private List<Asset>assets;
-        private List<Liability>liabilities;
-        public BalanceSheet(){
-            this.assets=new ArrayList<>();
-            this.liabilities=new ArrayList<>();
+
+    static class BalanceSheet {
+        private List<Asset> assets;
+        private List<Liability> liabilities;
+
+        public BalanceSheet() {
+            this.assets = new ArrayList<>();
+            this.liabilities = new ArrayList<>();
         }
-        public void addAsset(Asset asset){
+
+        public void addAsset(Asset asset) {
             assets.add(asset);
         }
-        
+
         public void addLiability(Liability liability) {
             liabilities.add(liability);
         }
-        
+
         private double calculateTotalAssets(boolean current) {
             return assets.stream().filter(a -> a.isCurrent() == current).mapToDouble(Asset::getValue).sum();
         }
@@ -79,64 +97,78 @@ public class Balancesheet{
         public double calculateEquity() {
             return calculateTotalAssets() - calculateTotalLiabilities();
         }
-      public void display(){
-          System.out.println("\n======STARTUP BALANCE SHEET======");
 
-          System.out.println("Assets:");
+        public void display() {
+            System.out.println("\n=====================STARTUP BALANCE SHEET========================");
 
-          System.out.println("\nCurrent Assets:");
-          assets.stream().filter(Asset::isCurrent).forEach(System.out::println);
-          System.out.printf("%-45s Rs.%.2f\n", "Total Current Assets:", calculateTotalAssets(true));
+            System.out.println("Assets:");
 
-          System.out.println("\nNon-Current Assets:");
-          assets.stream().filter(a -> !a.isCurrent()).forEach(System.out::println);
-          System.out.printf("%-45s Rs.%.2f\n", "Total Non-Current Assets:", calculateTotalAssets(false));
+            System.out.println("\nCurrent Assets:");
+            assets.stream()
+                    .filter(Asset::isCurrent)
+                    .forEach(asset -> System.out.printf("%-45s Rs.%.2f%n", asset.getName(), asset.getValue()));
+            System.out.printf("%-45s Rs.%.2f\n", "Total Current Assets:", calculateTotalAssets(true));
 
-          System.out.printf("\nTotal Assets:%44s Rs.%.2f\n", "", calculateTotalAssets());
+            System.out.println("\nNon-Current Assets:");
+            assets.stream()
+                    .filter(a -> !a.isCurrent())
+                    .forEach(asset -> System.out.printf("%-45s Rs.%.2f%n", asset.getName(), asset.getValue()));
+            System.out.printf("%-45s Rs.%.2f\n", "Total Non-Current Assets:", calculateTotalAssets(false));
 
-          System.out.println("\nLiabilities:");
+            System.out.printf("\nTotal Assets:%32s Rs.%.2f\n", "", calculateTotalAssets());
 
-          System.out.println("\nShort-term Liabilities:");
-          liabilities.stream().filter(Liability::isShortTerm).forEach(System.out::println);
-          System.out.printf("%-45s Rs.%.2f\n", "Total Short-term Liabilities:", calculateTotalLiabilities(true));
+            System.out.println("\nLiabilities:");
 
-          System.out.println("\nLong-term Liabilities:");
-          liabilities.stream().filter(l -> !l.isShortTerm()).forEach(System.out::println);
-          System.out.printf("%-45s Rs.%.2f\n", "Total Long-term Liabilities:", calculateTotalLiabilities(false));
+            System.out.println("\nShort-term Liabilities:");
+            liabilities.stream()
+                    .filter(Liability::isShortTerm)
+                    .forEach(liability -> System.out.printf("%-45s Rs.%.2f%n", liability.getName(),
+                            liability.getValue()));
+            System.out.printf("%-45s Rs.%.2f\n", "Total Short-term Liabilities:", calculateTotalLiabilities(true));
 
-          System.out.printf("%-45s Rs.%.2f\n", "\nTotal Liabilities:", calculateTotalLiabilities());
+            System.out.println("\nLong-term Liabilities:");
+            liabilities.stream()
+                    .filter(l -> !l.isShortTerm())
+                    .forEach(liability -> System.out.printf("%-45s Rs.%.2f%n", liability.getName(),
+                            liability.getValue()));
+            System.out.printf("%-45s Rs.%.2f\n", "Total Long-term Liabilities:", calculateTotalLiabilities(false));
 
-          System.out.printf("%-45s Rs.%.2f\n", "\nOwner's Equity:", calculateEquity());
+            System.out.printf("%-46s Rs.%.2f\n", "\nTotal Liabilities:", calculateTotalLiabilities());
 
-          System.out.println("==========================================");
+            System.out.printf("%-46s Rs.%.2f\n", "\nOwner's Equity:", calculateEquity());
 
-      }
+            System.out.println("=========================================================");
+
+        }
 
     }
-    public static void main(String args[]){
-            Scanner s=new Scanner(System.in);
-            BalanceSheet ns=new BalanceSheet();
-            System.out.println("Enter asset details(name,value,type). Type done when finish:");
-            String[] assetTypes = {
-                    "Cash and cash equivalents", "Marketable securities", "Inventories",
-                    "Accounts receivable, net and other",
-                    "Property and equipment, net", "Goodwill", "Other assets"
-            };
-            for(String assetType:assetTypes){
-                System.out.println("Enter value for "+assetType+": Rs.");
-                double value=s.nextDouble();
-                boolean isCurrent = assetType.equals("Cash and cash equivalents")
-                        || assetType.equals("Marketable securities") ||
-                        assetType.equals("Inventories") || assetType.equals("Accounts receivable, net and other");
-                ns.addAsset(new Asset(assetType, value, isCurrent));
-            }
-              String[] liabilityTypes = {
-                "Income tax payable", "Sales tax liability", "Debt on business loans", "Contracts you can't cancel without penalty",
-                "Lease agreements", "Insurance payable", "Benefits payable", "Taxes on investments", "Accrued liabilities"
+
+    public static void main(String args[]) {
+        Scanner s = new Scanner(System.in);
+        BalanceSheet ns = new BalanceSheet();
+        System.out.println("Enter asset details(name,value,type). Type done when finish:");
+        String[] assetTypes = {
+                "Cash and cash equivalents", "Marketable securities", "Inventories",
+                "Accounts receivable, net and other",
+                "Property and equipment, net", "Goodwill", "Other assets"
+        };
+        for (String assetType : assetTypes) {
+            System.out.println("Enter value for " + assetType + ": Rs.");
+            double value = s.nextDouble();
+            boolean isCurrent = assetType.equals("Cash and cash equivalents")
+                    || assetType.equals("Marketable securities") ||
+                    assetType.equals("Inventories") || assetType.equals("Accounts receivable, net and other");
+            ns.addAsset(new Asset(assetType, value, isCurrent));
+        }
+        String[] liabilityTypes = {
+                "Income tax payable", "Sales tax liability", "Debt on business loans",
+                "Contracts you can't cancel without penalty",
+                "Lease agreements", "Insurance payable", "Benefits payable", "Taxes on investments",
+                "Accrued liabilities"
         };
 
         for (String liabilityType : liabilityTypes) {
-            System.out.print("Enter value for " + liabilityType + ": $");
+            System.out.print("Enter value for " + liabilityType + ": Rs.");
             double value = s.nextDouble();
             System.out.print("Is this short-term? (yes/no): ");
             boolean isShortTerm = s.next().equalsIgnoreCase("yes");
